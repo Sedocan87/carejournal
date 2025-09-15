@@ -40,45 +40,36 @@ class _TimelineScreenState extends State<TimelineScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CareJournal'),
+        title: Text('CareJournal', style: Theme.of(context).textTheme.headlineMedium),
         actions: [
-          Semantics(
-            label: 'Export to PDF',
-            child: IconButton(
-              icon: const Icon(Icons.picture_as_pdf),
-              onPressed: () async {
-                final logEntries = await _logEntriesFuture;
-                if (logEntries.isNotEmpty) {
-                  await PdfExportService().generateAndSharePdf(logEntries);
-                }
-              },
-            ),
+          IconButton(
+            icon: const Icon(Icons.picture_as_pdf),
+            onPressed: () async {
+              final logEntries = await _logEntriesFuture;
+              if (logEntries.isNotEmpty) {
+                await PdfExportService().generateAndSharePdf(logEntries);
+              }
+            },
           ),
-          Semantics(
-            label: 'Privacy Policy',
-            child: IconButton(
-              icon: const Icon(Icons.privacy_tip),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const PrivacyPolicyScreen(),
-                  ),
-                );
-              },
-            ),
+          IconButton(
+            icon: const Icon(Icons.privacy_tip),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PrivacyPolicyScreen(),
+                ),
+              );
+            },
           ),
-          Semantics(
-            label: 'Export to CSV',
-            child: IconButton(
-              icon: const Icon(Icons.description),
-              onPressed: () async {
-                final logEntries = await _logEntriesFuture;
-                if (logEntries.isNotEmpty) {
-                  await CsvExportService().generateAndShareCsv(logEntries);
-                }
-              },
-            ),
+          IconButton(
+            icon: const Icon(Icons.description),
+            onPressed: () async {
+              final logEntries = await _logEntriesFuture;
+              if (logEntries.isNotEmpty) {
+                await CsvExportService().generateAndShareCsv(logEntries);
+              }
+            },
           ),
         ],
       ),
@@ -100,7 +91,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
               final entry = logEntries[index];
               return Card(
                 child: ListTile(
-                  title: Text(entry.title),
+                  title: Text(entry.title, style: Theme.of(context).textTheme.titleLarge),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -112,27 +103,27 @@ class _TimelineScreenState extends State<TimelineScreen> {
                         ),
                     ],
                   ),
-                  trailing: Text(entry.timestamp.toString()),
+                  trailing: Text(
+                    entry.timestamp.toString(),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                  ),
                 ),
               );
             },
           );
         },
       ),
-      floatingActionButton: Semantics(
-        label: 'Add new log entry',
-        child: FloatingActionButton(
-          onPressed: () async {
-            final result = await Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AddEntryScreen()),
-            );
-            if (result == true) {
-              _loadLogEntries();
-            }
-          },
-          child: const Icon(Icons.add),
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddEntryScreen()),
+          );
+          if (result == true) {
+            _loadLogEntries();
+          }
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

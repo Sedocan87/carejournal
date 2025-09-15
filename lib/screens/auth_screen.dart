@@ -1,6 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart' hide Scaffold;
 import 'package:local_auth/local_auth.dart';
 import 'package:carejournal/screens/timeline_screen.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart' as shadcn;
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -19,6 +21,14 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Future<void> _authenticate() async {
+    if (kIsWeb) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const TimelineScreen()),
+        );
+      });
+      return;
+    }
     bool authenticated = false;
     try {
       authenticated = await _localAuthentication.authenticate(
@@ -32,6 +42,8 @@ class _AuthScreenState extends State<AuthScreen> {
     }
 
     if (authenticated) {
+      if (!mounted) return;
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const TimelineScreen()),
       );
@@ -42,9 +54,9 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
+    return const shadcn.Scaffold(
+      child: Center(
+        child: shadcn.CircularProgressIndicator(),
       ),
     );
   }

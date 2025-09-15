@@ -15,7 +15,7 @@ class PdfExportService {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Header(level: 0, child: pw.Text('CareJournal Report')),
-              pw.Table.fromTextArray(
+              pw.TableHelper.fromTextArray(
                 headers: ['Timestamp', 'Type', 'Title', 'Notes'],
                 data: logEntries
                     .map((entry) => [

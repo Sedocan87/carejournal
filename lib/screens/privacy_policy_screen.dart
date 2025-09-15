@@ -9,7 +9,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Privacy Policy'),
+        title: Text('Privacy Policy', style: Theme.of(context).textTheme.headlineMedium),
       ),
       body: FutureBuilder(
         future: rootBundle.loadString('assets/privacy_policy.md'),

@@ -21,7 +21,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add New Entry'),
+        title: Text('Add New Entry', style: Theme.of(context).textTheme.headlineMedium),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -56,17 +56,9 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () async {
+                onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    final newEntry = LogEntry(
-                      timestamp: DateTime.now(),
-                      entryType: _imageFile == null ? 'note' : 'photo',
-                      title: _titleController.text,
-                      notes: _notesController.text,
-                      data: _imageFile?.path,
-                    );
-                    await DatabaseHelper().insertLogEntry(newEntry.toMap());
-                    Navigator.pop(context, true);
+                    _saveEntry();
                   }
                 },
                 child: const Text('Save'),
@@ -77,6 +69,21 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
       ),
     );
   }
+
+  void _saveEntry() async {
+    final newEntry = LogEntry(
+      timestamp: DateTime.now(),
+      entryType: _imageFile == null ? 'note' : 'photo',
+      title: _titleController.text,
+      notes: _notesController.text,
+      data: _imageFile?.path,
+    );
+    await DatabaseHelper().insertLogEntry(newEntry.toMap());
+    if (!mounted) return;
+    // ignore: use_build_context_synchronously
+    Navigator.pop(context, true);
+  }
+
   Future<void> _pickImage() async {
     final pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
