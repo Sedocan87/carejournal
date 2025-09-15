@@ -46,6 +46,7 @@ dependencies:
   uuid: ^4.3.3
   path: ^1.9.1
   shadcn_flutter: ^0.0.37
+  dotted_border: ^2.1.0
 
 dev_dependencies:
   flutter_test:
