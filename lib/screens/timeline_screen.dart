@@ -40,7 +40,10 @@ class _TimelineScreenState extends State<TimelineScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('CareJournal', style: Theme.of(context).textTheme.headlineMedium),
+        title: Text(
+          'CareJournal',
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.picture_as_pdf),
@@ -91,21 +94,23 @@ class _TimelineScreenState extends State<TimelineScreen> {
               final entry = logEntries[index];
               return Card(
                 child: ListTile(
-                  title: Text(entry.title, style: Theme.of(context).textTheme.titleLarge),
+                  title: Text(
+                    entry.title,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(entry.notes ?? ''),
                       if (entry.entryType == 'photo' && entry.data != null)
-                        Image.file(
-                          File(entry.data!),
-                          height: 150,
-                        ),
+                        Image.file(File(entry.data!), height: 150),
                     ],
                   ),
                   trailing: Text(
                     entry.timestamp.toString(),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: Colors.grey),
                   ),
                 ),
               );

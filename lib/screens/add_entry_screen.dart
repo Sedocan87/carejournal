@@ -21,7 +21,10 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add New Entry', style: Theme.of(context).textTheme.headlineMedium),
+        title: Text(
+          'Add New Entry',
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -45,10 +48,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
               ),
               const SizedBox(height: 20),
               if (_imageFile != null)
-                Image.file(
-                  File(_imageFile!.path),
-                  height: 150,
-                ),
+                Image.file(File(_imageFile!.path), height: 150),
               ElevatedButton.icon(
                 onPressed: _pickImage,
                 icon: const Icon(Icons.photo_library),
@@ -85,8 +85,9 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
     if (pickedFile != null) {
       setState(() {
         _imageFile = pickedFile;
