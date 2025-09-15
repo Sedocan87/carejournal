@@ -1,0 +1,12 @@
+# General
+.dart_tool/
+.idea/
+build/
+*.iml
+*.lock
+
+# Platforms
+windows/
+linux/
+macos/
+web/
