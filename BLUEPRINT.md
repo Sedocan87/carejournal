@@ -18,55 +18,41 @@ User Empowerment: The app provides tools for self-discovery, not algorithmic pre
 Practical Utility: The "Doctor's Report" feature solves a critical pain point by transforming personal logs into a clear, actionable summary for healthcare providers.
 
 1.2. Guiding Principles: Privacy by Design (PbD)
-The entire development process will be governed by the seven principles of Privacy by Design. This is not an afterthought; it is the foundation of the architecture.  
+The entire development process will be governed by the seven principles of Privacy by Design. This is not an afterthought; it is the foundation of the architecture.  
 
 Proactive, not Reactive: We will build security in from the start, not patch it in later.
 
-Privacy as the Default: The app will collect the absolute minimum data necessary to function. All privacy-enhancing features will be on by default.  
+Privacy as the Default: The app will collect the absolute minimum data necessary to function. All privacy-enhancing features will be on by default.  
 
-Privacy Embedded into Design: The on-device architecture is a direct embodiment of this principle.  
+Privacy Embedded into Design: The on-device architecture is a direct embodiment of this principle.  
 
-Full Functionality (Positive-Sum): The absence of cloud features is presented as a benefit: enhanced speed, offline capability, and ultimate privacy.  
+Full Functionality (Positive-Sum): The absence of cloud features is presented as a benefit: enhanced speed, offline capability, and ultimate privacy.  
 
-End-to-End Security: Data is encrypted from the moment it's created until the user chooses to delete it.  
+End-to-End Security: Data is encrypted from the moment it's created until the user chooses to delete it.  
 
-Visibility and Transparency: The app's UI and privacy policy will be clear, honest, and written in plain language.  
+Visibility and Transparency: The app's UI and privacy policy will be clear, honest, and written in plain language.  
 
-User-Centric: The user is the sole owner and controller of their data. The app will provide easy tools to manage, export, and delete it.  
+User-Centric: The user is the sole owner and controller of their data. The app will provide easy tools to manage, export, and delete it.  
 
 2. Technical Architecture & Specifications
 The app will be built using Flutter for cross-platform compatibility (iOS and Android) from a single codebase. The architecture is designed to be serverless from a user-data perspective.
 
 Component	Technology/Package	Rationale & Implementation Notes
 Framework	Flutter SDK	Enables cross-platform development for iOS and Android.
-Local Database
-sqflite_sqlcipher   
-
-Provides a local SQLite database with robust, industry-standard AES-256 encryption. This is the core of our on-device storage strategy, ensuring all health data is encrypted at rest.
-Encryption Key Storage
-flutter_secure_storage   
-
-Securely stores the database encryption key in the platform's native secure storage: Keychain for iOS and Keystore for Android. This prevents the key from being easily extracted.
-App Lock (Optional)
-local_auth   
-
-Allows the user to lock the app with their device's biometric authentication (Face ID, Touch ID, Fingerprint) or passcode, adding a crucial layer of security if the device is lost or shared.
-PDF Generation
-pdf   
-
-A powerful library for creating PDF documents directly on the device. It uses a widget-based system, making it intuitive for a Flutter developer to build the "Doctor's Report" layout.
-File System Access
-path_provider   
-
-Used to find the correct, secure directory on the device's file system to store the encrypted database and any generated reports.
-Data Export (CSV)
-to_csv or csv   
-
-To implement the "Export All Data" feature, allowing users to get a full backup of their information in an open, accessible format.
+Local Database	sqflite_sqlcipher  	Provides a local SQLite database with robust, industry-standard AES-256 encryption. This is the core of our on-device storage strategy, ensuring all health data is encrypted at rest.
+Encryption Key Storage	flutter_secure_storage  	Securely stores the database encryption key in the platform's native secure storage: Keychain for iOS and Keystore for Android. This prevents the key from being easily extracted.
+App Lock (Optional)	local_auth  	Allows the user to lock the app with their device's biometric authentication (Face ID, Touch ID, Fingerprint) or passcode, adding a crucial layer of security if the device is lost or shared.
+PDF Generation	pdf  	A powerful library for creating PDF documents directly on the device. It uses a widget-based system, making it intuitive for a Flutter developer to build the "Doctor's Report" layout.
+File System Access	path_provider  	Used to find the correct, secure directory on the device's file system to store the encrypted database and any generated reports.
+Data Export (CSV)	to_csv or csv  	To implement the "Export All Data" feature, allowing users to get a full backup of their information in an open, accessible format.
 Sharing	share_plus	To invoke the native OS sharing dialog, allowing the user to securely send their generated PDF or CSV reports via email, AirDrop, or other services without the app needing network permissions.
 Photo Integration	image_picker	To allow users to select photos from their gallery or take a new one to attach to log entries (e.g., a picture of a rash or a meal).
+Data Visualization	fl_chart	For creating charts and graphs to visualize health data over time.
+Backup Encryption	encrypt	To encrypt and decrypt the database for the secure backup and restore feature.
+File Selection	file_picker	To allow the user to select a backup file to restore from.
+
 3. Core Feature Implementation Plan
-Feature 1: Unified Health Log
+Feature 1: Unified Health Log (Done)
 This is the main screen of the app—a chronological timeline of all user-entered data.
 
 Data Model: A single log_entries table in the SQLite database.
@@ -75,11 +61,11 @@ id (INTEGER, PRIMARY KEY)
 
 timestamp (TEXT, ISO 8601 format)
 
-entry_type (TEXT: 'symptom', 'medication', 'food', 'activity', 'note', 'photo')
+entry_type (TEXT: 'symptom', 'note', 'photo')
 
-title (TEXT, e.g., "Headache" or "Ibuprofen")
+title (TEXT, e.g., "Headache")
 
-data (TEXT, JSON-encoded string for flexible data like {"severity": 7, "location": "temples"} or {"dosage": "200mg"})
+data (TEXT, JSON-encoded string for flexible data like {"severity": 7, "location": "temples"} or {"path": "/path/to/image.jpg"})
 
 notes (TEXT, optional user-written details)
 
@@ -87,89 +73,85 @@ report_tag (INTEGER, boolean flag for inclusion in the Doctor's Report)
 
 Implementation:
 
-Build a ListView.builder to display entries fetched from the database.
+-   **Done:** Build a ListView.builder with ExpansionTiles to display entries fetched from the database.
+-   **Done:** Create a Floating Action Button that opens a dedicated "Add Entry" screen.
+-   **Done:** On the "Add Entry" screen, a dropdown allows users to select the entry type ('Note', 'Symptom', 'Photo').
+-   **Done:** For 'Symptom' entries, UI elements for severity (slider) and location (text field) are available.
+-   **Done:** For 'Photo' entries, use image_picker to select an image and store its path.
+-   **Done:** A search bar is implemented to filter the timeline.
 
-Create a Floating Action Button that opens a dialog to select the entry type.
-
-Develop separate, simple input forms for each entry type.
-
-For photos, use image_picker and save the image to the app's private directory obtained via path_provider. Store the file path in the database.
-
-Feature 2: "Doctor's Report" Generator
+Feature 2: "Doctor's Report" Generator (Done)
 The app's killer feature. It generates a clean, professional PDF summary on-device.
 
 Implementation:
 
-Create a UI where the user can select specific entries to include (using the report_tag flag) or select a date range.
+-   **Done:** The user can export all data to PDF or CSV from the main menu.
+-   **Done:** On "Generate," query the local database for the relevant log_entries.
+-   **Done:** Use the pdf package to construct the document.
+-   **Done:** Use share_plus to let the user share or save the file.
 
-On "Generate," query the local database for the relevant log_entries.
+Feature 3: Data Visualization (Done)
+A dashboard screen to help users visualize their health data.
 
-Use the pdf package to construct the document.  
+Implementation:
 
-Create a title page with the patient's name (stored in non-sensitive shared_preferences) and the date range.
+-   **Done:** A "Dashboard" screen is accessible from the timeline.
+-   **Done:** It fetches all 'symptom' entries.
+-   **Done:** It uses the fl_chart package to display a line chart of symptom severity over time.
 
-Iterate through the query results, using the pdf package's widget-like components (pw.Column, pw.Text, pw.Table) to format each entry chronologically.
+Feature 4: Secure Backup and Restore (Done)
+A secure, user-controlled backup and restore mechanism.
 
-Save the generated PDF to a temporary directory using path_provider.  
+Implementation:
 
-Use share_plus to let the user share or save the file.
+-   **Done:** "Backup" and "Restore" options are available in the main menu.
+-   **Done:** Backups are encrypted with a user-provided password using the `encrypt` package.
+-   **Done:** The `share_plus` package is used to export the encrypted backup file.
+-   **Done:** The `file_picker` package is used to import a backup file for restoration.
+-   **Done:** The app prompts the user to restart after a successful restore.
 
-Feature 3: Data Management & Accessibility
+Feature 5: Data Management & Accessibility
 Empowering users with control and ensuring the app is usable by everyone.
 
 Data Export:
 
-Provide an "Export All Data to CSV" button in settings.
-
-Query all data from the database, format it into a List<List<String>>, and use the to_csv package to generate the file.  
-
-Use share_plus for exporting.
+-   **Done:** Provide "Export All Data to CSV" and "Export to PDF" buttons in the main menu.
 
 Accessibility (A11y): This is a top priority for the target audience.
 
-Semantic Labels: Wrap all IconButtons and non-obvious UI elements in a Semantics widget with a clear, descriptive label for screen readers.  
-
-Contrast: Ensure all text and UI elements meet a minimum contrast ratio of 4.5:1 against their background.  
-
-Touch Targets: All buttons, toggles, and interactive elements must have a minimum size of 48x48dp.  
-
-Text Scaling: The UI must be responsive and remain usable when the user increases the system font size.  
-
-Cognitive Load: Keep the UI simple, with clear navigation and one primary action per screen.  
+-   **Partially Done:** The app respects system font size scaling and has good contrast with the light/dark themes. Further auditing is required.
 
 4. Phased Implementation Plan
 This is a suggested timeline for a solo developer or small team.
 
-Phase 1: Foundation & Core Logic (4 Weeks)
+Phase 1: Foundation & Core Logic (Done)
 
-Week 1: Project setup, all dependencies added, Git repository initialized.
+-   **Done:** Project setup, all dependencies added, Git repository initialized.
+-   **Done:** Implement the secure database architecture. Create a DatabaseHelper class that handles key generation/retrieval (flutter_secure_storage) and database initialization/encryption (sqflite_sqlcipher). Define all data models.
+-   **Done:** Build the main timeline UI and the forms for adding/editing basic log entries.
 
-Week 2-3: Implement the secure database architecture. Create a DatabaseHelper class that handles key generation/retrieval (flutter_secure_storage) and database initialization/encryption (sqflite_sqlcipher). Define all data models.
+Phase 2: Feature Expansion (Done)
 
-Week 4: Build the main timeline UI and the forms for adding/editing basic log entries (text-based only).
+-   **Done:** Implement the "Doctor's Report" PDF generation and sharing functionality.
+-   **Done:** Add the photo journal feature.
+-   **Done:** Implement the full data export to CSV feature.
+-   **Done:** Implement search and filtering.
+-   **Done:** Implement data visualization.
+-   **Done:** Implement secure backup and restore.
 
-Phase 2: Feature Expansion (4 Weeks)
+Phase 3: Polish & Testing (In Progress)
 
-Week 5-6: Implement the "Doctor's Report" PDF generation and sharing functionality.
+-   **In Progress:** UI/UX refinement, adding animations, and ensuring a smooth user flow.
+-   **To Do:** Conduct a full accessibility audit. Implement all necessary Semantics, check contrast ratios, and test with TalkBack and VoiceOver.
+-   **To Do:** Implement the optional biometric app lock.
 
-Week 7: Add the photo journal feature, including image capture/selection and storage.
+Phase 4: Deployment (To Do)
 
-Week 8: Implement the full data export to CSV feature.
-
-Phase 3: Polish & Testing (3 Weeks)
-
-Week 9-10: Conduct a full accessibility audit. Implement all necessary Semantics, check contrast ratios, and test with TalkBack and VoiceOver.
-
-Week 11: UI/UX refinement, adding animations, and ensuring a smooth user flow. Implement the optional biometric app lock.
-
-Phase 4: Deployment (2 Weeks)
-
-Week 12: Write the plain-language privacy policy. Prepare App Store and Google Play Store listings.
-
-Week 13: Final round of testing on physical devices. Beta test with a small group of target users if possible. Submit for review.
+-   **To Do:** Write the plain-language privacy policy. Prepare App Store and Google Play Store listings.
+-   **To Do:** Final round of testing on physical devices. Beta test with a small group of target users if possible. Submit for review.
 
 5. Privacy Policy Requirements
-Even though the app does not collect user data, a privacy policy is required by the app stores. The policy must be easily accessible within the app and on the store listing.  
+Even though the app does not collect user data, a privacy policy is required by the app stores. The policy must be easily accessible within the app and on the store listing.  
 
 Key points to include:
 
@@ -179,7 +161,4 @@ Data Storage Explanation: "Your data is saved in a database on your phone that i
 
 Data Ownership: "You are the sole owner of your data. CareJournal provides tools for you to export or delete your data at any time."
 
-Contact Information: Provide an email address for any privacy-related questions.  
-
-
-Sources and related content
+Contact Information: Provide an email address for any privacy-related questions.
