@@ -1,11 +1,18 @@
 import 'package:carejournal/screens/auth_screen.dart';
 import 'package:carejournal/services/notification_service.dart';
+import 'package:carejournal/services/settings_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService().init();
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => SettingsProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
