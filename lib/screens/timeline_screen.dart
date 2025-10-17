@@ -2,9 +2,10 @@ import 'dart:io';
 import 'package:carejournal/models/log_entry.dart';
 import 'package:carejournal/screens/dashboard_screen.dart';
 import 'package:carejournal/screens/privacy_policy_screen.dart';
+import 'package:carejournal/screens/settings_screen.dart';
 import 'package:carejournal/services/backup_service.dart';
 import 'package:carejournal/services/csv_export_service.dart';
-import 'package:carejournal/services/database_helper.dart';
+import 'package:carejournal/services/database_service.dart';
 import 'package:carejournal/services/pdf_export_service.dart';
 import 'package:flutter/material.dart';
 import 'package:carejournal/screens/add_entry_screen.dart';
@@ -66,7 +67,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
     DateTime? startDate,
     DateTime? endDate,
   }) async {
-    final dbHelper = DatabaseHelper();
+    final dbHelper = DatabaseService.instance;
     final maps = await dbHelper.getLogEntries(
       searchQuery: searchQuery,
       tags: tags,
@@ -99,6 +100,17 @@ class _TimelineScreenState extends State<TimelineScreen> {
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.filter_list),
             onPressed: _showFilterDialog,
@@ -266,7 +278,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
   }
 
   void _showFilterDialog() async {
-    final allTags = await DatabaseHelper().getAllTags();
+    final allTags = await DatabaseService.instance.getAllTags();
     List<String> tempSelectedTags = List<String>.from(_selectedTags);
     String? tempSelectedEntryTypeFilter = _selectedEntryTypeFilter;
     DateTime? tempStartDateFilter = _startDateFilter;

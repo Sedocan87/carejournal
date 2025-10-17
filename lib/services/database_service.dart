@@ -4,10 +4,10 @@ import 'package:sqflite_sqlcipher/sqflite.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:uuid/uuid.dart';
 
-class DatabaseHelper {
-  static final DatabaseHelper _instance = DatabaseHelper._internal();
-  factory DatabaseHelper() => _instance;
-  DatabaseHelper._internal();
+class DatabaseService {
+  static final DatabaseService instance = DatabaseService._internal();
+  factory DatabaseService() => instance;
+  DatabaseService._internal();
 
   static Database? _database;
   static const _dbName = 'carejournal.db';
@@ -42,6 +42,12 @@ class DatabaseHelper {
       await storage.write(key: 'db_password', value: password);
     }
     return password;
+  }
+
+  Future<bool> isPasswordSet() async {
+    const storage = FlutterSecureStorage();
+    final password = await storage.read(key: 'db_password');
+    return password != null;
   }
 
   Future<Database> _initDatabase() async {
