@@ -20,7 +20,7 @@ class TimelineScreen extends StatefulWidget {
   State<TimelineScreen> createState() => _TimelineScreenState();
 }
 
-class _TimelineScreenState extends State<TimelineScreen> {
+class _TimelineScreenState extends State<TimelineScreen> with TickerProviderStateMixin {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   List<LogEntry> _logEntries = [];
   final _searchController = TextEditingController();
@@ -218,11 +218,10 @@ class _TimelineScreenState extends State<TimelineScreen> {
                     message: "Your journal is ready. Tap the '+' to log your first entry and start your health story.",
                     icon: Icons.book_outlined,
                   )
-                : AnimatedList(
-                    key: _listKey,
-                    initialItemCount: _logEntries.length,
-                    itemBuilder: (context, index, animation) {
-                      return _buildItem(_logEntries[index], animation);
+                : ListView.builder(
+                    itemCount: _logEntries.length,
+                    itemBuilder: (context, index) {
+                      return _buildItem(_logEntries[index], AnimationController(vsync: this, duration: Duration.zero)..forward());
                     },
                   ),
           ),
@@ -239,9 +238,6 @@ class _TimelineScreenState extends State<TimelineScreen> {
             );
             if (result == true) {
               await _loadLogEntries(tags: _selectedTags);
-              if (_logEntries.isNotEmpty && _listKey.currentState != null) {
-                _listKey.currentState!.insertItem(0, duration: const Duration(milliseconds: 500));
-              }
             }
           },
           child: const Icon(Icons.add),

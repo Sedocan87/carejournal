@@ -10,43 +10,68 @@ class AppTheme {
       textTheme: textTheme,
       scaffoldBackgroundColor: lightColorScheme.surface,
       appBarTheme: AppBarTheme(
-        backgroundColor: lightColorScheme.primary,
-        foregroundColor: lightColorScheme.onPrimary,
+        backgroundColor: lightColorScheme.surface,
+        foregroundColor: lightColorScheme.onSurface,
         elevation: 0,
-        titleTextStyle: textTheme.titleLarge?.copyWith(color: lightColorScheme.onPrimary),
+        centerTitle: true,
+        titleTextStyle: textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.w600,
+          color: lightColorScheme.onSurface,
+        ),
+        iconTheme: IconThemeData(color: lightColorScheme.primary),
       ),
       cardTheme: CardThemeData(
-        elevation: 1,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        elevation: 2,
+        shadowColor: lightColorScheme.shadow.withOpacity(0.1),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         color: lightColorScheme.surface,
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: lightColorScheme.tertiary,
-        foregroundColor: lightColorScheme.onTertiary,
+        backgroundColor: lightColorScheme.primary,
+        foregroundColor: lightColorScheme.onPrimary,
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: lightColorScheme.primary,
           foregroundColor: lightColorScheme.onPrimary,
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
+          textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: lightColorScheme.outline),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: lightColorScheme.outline.withOpacity(0.3),
+          ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: lightColorScheme.outline),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: lightColorScheme.outline.withOpacity(0.3),
+          ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: lightColorScheme.primary, width: 2),
+        ),
+        hintStyle: TextStyle(
+          color: lightColorScheme.onSurface.withOpacity(0.5),
+          fontWeight: FontWeight.w400,
+        ),
+        labelStyle: TextStyle(
+          color: lightColorScheme.onSurface.withOpacity(0.7),
+          fontWeight: FontWeight.w500,
         ),
         filled: true,
         fillColor: lightColorScheme.surfaceContainerHighest.withAlpha(128),
@@ -61,16 +86,16 @@ class AppTheme {
       textTheme: darkTextTheme,
       scaffoldBackgroundColor: darkColorScheme.surface,
       appBarTheme: AppBarTheme(
-        backgroundColor: darkColorScheme.primary,
-        foregroundColor: darkColorScheme.onPrimary,
+        backgroundColor: darkColorScheme.surface,
+        foregroundColor: darkColorScheme.onSurface,
         elevation: 0,
-        titleTextStyle: darkTextTheme.titleLarge?.copyWith(color: darkColorScheme.onPrimary),
+        titleTextStyle: darkTextTheme.titleLarge?.copyWith(
+          color: darkColorScheme.onSurface,
+        ),
       ),
       cardTheme: CardThemeData(
         elevation: 1,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         color: darkColorScheme.surface,
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(

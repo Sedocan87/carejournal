@@ -3,24 +3,24 @@ import 'package:flutter/material.dart';
 // Light Theme Colors
 const lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: Color(0xFF006A7A), // Deep Teal
+  primary: Color(0xFF4285F4), // Modern Blue
   onPrimary: Color(0xFFFFFFFF),
-  primaryContainer: Color(0xFFB3E5FC),
-  onPrimaryContainer: Color(0xFF001F25),
-  secondary: Color(0xFF4C6267),
+  primaryContainer: Color(0xFFE8F0FE),
+  onPrimaryContainer: Color(0xFF0D2B5E),
+  secondary: Color(0xFF34A853), // Fresh Green
   onSecondary: Color(0xFFFFFFFF),
-  secondaryContainer: Color(0xFFCFE7EC),
-  onSecondaryContainer: Color(0xFF071F23),
-  tertiary: Color(0xFFFFA07A), // Soft Coral Accent
+  secondaryContainer: Color(0xFFE6F4EA),
+  onSecondaryContainer: Color(0xFF0D3321),
+  tertiary: Color(0xFFEA4335), // Vibrant Red
   onTertiary: Color(0xFFFFFFFF),
-  tertiaryContainer: Color(0xFFFFDBCF),
-  onTertiaryContainer: Color(0xFF28130B),
-  error: Color(0xFFBA1A1A),
+  tertiaryContainer: Color(0xFFFCE8E6),
+  onTertiaryContainer: Color(0xFF5D1B16),
+  error: Color(0xFFDC3545),
   onError: Color(0xFFFFFFFF),
-  errorContainer: Color(0xFFFFDAD6),
-  onErrorContainer: Color(0xFF410002),
-  surface: Color(0xFFF8F8F8), // Warm Off-White
-  onSurface: Color(0xFF1A1C1E), // Dark Charcoal
+  errorContainer: Color(0xFFFBE7E9),
+  onErrorContainer: Color(0xFF58151C),
+  surface: Color(0xFFFAFAFA), // Clean White
+  onSurface: Color(0xFF202124), // Google Dark Gray
   surfaceContainerHighest: Color(0xFFDBE4E6),
   onSurfaceVariant: Color(0xFF3F484A),
   outline: Color(0xFF6F797B),
@@ -33,21 +33,21 @@ const lightColorScheme = ColorScheme(
 // Dark Theme Colors
 const darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
-  primary: Color(0xFF5DD5EF), // Lighter Teal for dark mode
-  onPrimary: Color(0xFF00363F),
-  primaryContainer: Color(0xFF004E5A),
-  onPrimaryContainer: Color(0xFFB3E5FC),
-  secondary: Color(0xFFB3CAD0),
-  onSecondary: Color(0xFF1E3438),
-  secondaryContainer: Color(0xFF354B4F),
-  onSecondaryContainer: Color(0xFFCFE7EC),
-  tertiary: Color(0xFFFFB59C), // Lighter Coral for dark mode
-  onTertiary: Color(0xFF4D2416),
-  tertiaryContainer: Color(0xFF6A3A2A),
-  onTertiaryContainer: Color(0xFFFFDBCF),
-  error: Color(0xFFFFB4AB),
-  onError: Color(0xFF690005),
-  errorContainer: Color(0xFF93000A),
+  primary: Color(0xFF8AB4F8), // Softer Blue for dark mode
+  onPrimary: Color(0xFF0D2B5E),
+  primaryContainer: Color(0xFF1A73E8),
+  onPrimaryContainer: Color(0xFFE8F0FE),
+  secondary: Color(0xFF81C995), // Softer Green for dark mode
+  onSecondary: Color(0xFF0D3321),
+  secondaryContainer: Color(0xFF34A853),
+  onSecondaryContainer: Color(0xFFE6F4EA),
+  tertiary: Color(0xFFF28B82), // Softer Red for dark mode
+  onTertiary: Color(0xFF5D1B16),
+  tertiaryContainer: Color(0xFFEA4335),
+  onTertiaryContainer: Color(0xFFFCE8E6),
+  error: Color(0xFFE57373),
+  onError: Color(0xFF58151C),
+  errorContainer: Color(0xFFDC3545),
   onErrorContainer: Color(0xFFFFB4AB),
   surface: Color(0xFF1C1C2E), // Deep, warm dark blue/purple
   onSurface: Color(0xFFE2E2E3),
