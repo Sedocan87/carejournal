@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:carejournal/models/log_entry.dart';
-import 'package:carejournal/services/database_helper.dart';
+import 'package:carejournal/services/database_service.dart';
 import 'package:carejournal/services/notification_service.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -42,70 +42,46 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      DropdownButtonFormField<String>(
-                        value: _selectedEntryType,
-                        items: ['Note', 'Symptom', 'Photo', 'Medication', 'Appointment']
-                            .map(
-                              (label) => DropdownMenuItem(
-                                value: label,
-                                child: Text(label),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedEntryType = value!;
-                          });
-                        },
-                        decoration: InputDecoration(
-                          labelText: 'Entry Type',
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
+                      Semantics(
+                        label: 'Select Entry Type',
+                        child: DropdownButtonFormField<String>(
+                          value: _selectedEntryType,
+                          items: [
+                            'Note',
+                            'Symptom',
+                            'Photo',
+                            'Medication',
+                            'Appointment'
+                          ]
+                              .map(
+                                (label) => DropdownMenuItem(
+                                  value: label,
+                                  child: Text(label),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedEntryType = value!;
+                            });
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'Entry Type',
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 20),
                       Text('Title', style: theme.textTheme.titleLarge),
                       const SizedBox(height: 8),
-                      TextFormField(
-                        controller: _titleController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                          contentPadding: const EdgeInsets.all(16),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a title';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      if (_selectedEntryType == 'Symptom') ...[
-                        Text('Severity', style: theme.textTheme.titleLarge),
-                        Slider(
-                          value: _severity,
-                          min: 0,
-                          max: 10,
-                          divisions: 10,
-                          label: _severity.round().toString(),
-                          onChanged: (value) {
-                            setState(() {
-                              _severity = value;
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        Text('Location', style: theme.textTheme.titleLarge),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          controller: _locationController,
+                      Semantics(
+                        label: 'Enter a title for the entry',
+                        child: TextFormField(
+                          controller: _titleController,
                           decoration: InputDecoration(
                             filled: true,
                             border: OutlineInputBorder(
@@ -113,6 +89,48 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                               borderSide: BorderSide.none,
                             ),
                             contentPadding: const EdgeInsets.all(16),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a title';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      if (_selectedEntryType == 'Symptom') ...[
+                        Text('Severity', style: theme.textTheme.titleLarge),
+                        Semantics(
+                          label: 'Select symptom severity',
+                          child: Slider(
+                            value: _severity,
+                            min: 0,
+                            max: 10,
+                            divisions: 10,
+                            label: _severity.round().toString(),
+                            onChanged: (value) {
+                              setState(() {
+                                _severity = value;
+                              });
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Text('Location', style: theme.textTheme.titleLarge),
+                        const SizedBox(height: 8),
+                        Semantics(
+                          label: 'Enter symptom location',
+                          child: TextFormField(
+                            controller: _locationController,
+                            decoration: InputDecoration(
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              contentPadding: const EdgeInsets.all(16),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -140,17 +158,20 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                       ],
                       Text('Notes', style: theme.textTheme.titleLarge),
                       const SizedBox(height: 8),
-                      TextFormField(
-                        controller: _notesController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
+                      Semantics(
+                        label: 'Enter notes',
+                        child: TextFormField(
+                          controller: _notesController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: const EdgeInsets.all(16),
                           ),
-                          contentPadding: const EdgeInsets.all(16),
+                          maxLines: 5,
                         ),
-                        maxLines: 5,
                       ),
                       const SizedBox(height: 20),
                       Text('Tags', style: theme.textTheme.titleLarge),
@@ -169,58 +190,64 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
                                 ))
                             .toList(),
                       ),
-                      TextFormField(
-                        controller: _tagController,
-                        decoration: InputDecoration(
-                          hintText: 'Add a tag',
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
+                      Semantics(
+                        label: 'Add a tag',
+                        child: TextFormField(
+                          controller: _tagController,
+                          decoration: InputDecoration(
+                            hintText: 'Add a tag',
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                            contentPadding: const EdgeInsets.all(16),
                           ),
-                          contentPadding: const EdgeInsets.all(16),
+                          onFieldSubmitted: (value) {
+                            if (value.isNotEmpty && !_tags.contains(value)) {
+                              setState(() {
+                                _tags.add(value);
+                              });
+                              _tagController.clear();
+                            }
+                          },
                         ),
-                        onFieldSubmitted: (value) {
-                          if (value.isNotEmpty && !_tags.contains(value)) {
-                            setState(() {
-                              _tags.add(value);
-                            });
-                            _tagController.clear();
-                          }
-                        },
                       ),
                       const SizedBox(height: 20),
                       if (_selectedEntryType == 'Photo')
                         if (_imageFile == null)
-                          GestureDetector(
-                            onTap: _pickImage,
-                            child: DottedBorder(
-                              color: theme.colorScheme.onSurface,
-                              strokeWidth: 1,
-                              dashPattern: const [6, 6],
-                              borderType: BorderType.RRect,
-                              radius: const Radius.circular(10),
-                              child: Container(
-                                height: 150,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color:
-                                      theme.colorScheme.surfaceContainerHighest,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(
-                                      Icons.add_a_photo_outlined,
-                                      size: 40,
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      'Add Photo',
-                                      style: theme.textTheme.bodyLarge,
-                                    ),
-                                  ],
+                          Semantics(
+                            label: 'Add a photo to the entry',
+                            child: GestureDetector(
+                              onTap: _pickImage,
+                              child: DottedBorder(
+                                color: theme.colorScheme.onSurface,
+                                strokeWidth: 1,
+                                dashPattern: const [6, 6],
+                                borderType: BorderType.RRect,
+                                radius: const Radius.circular(10),
+                                child: Container(
+                                  height: 150,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: theme
+                                        .colorScheme.surfaceContainerHighest,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(
+                                        Icons.add_a_photo_outlined,
+                                        size: 40,
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Add Photo',
+                                        style: theme.textTheme.bodyLarge,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -253,19 +280,23 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
             const SizedBox(height: 20),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _saveEntry();
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+              child: Semantics(
+                label: 'Save the new entry',
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _saveEntry();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
+                  child:
+                      const Text('Save Entry', style: TextStyle(fontSize: 18)),
                 ),
-                child: const Text('Save Entry', style: TextStyle(fontSize: 18)),
               ),
             ),
           ],
@@ -317,7 +348,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
       notes: _notesController.text,
       data: data,
     );
-    final logEntryId = await DatabaseHelper().insertLogEntry(newEntry.toMap(), _tags);
+    final logEntryId = await DatabaseService.instance.insertLogEntry(newEntry.toMap(), _tags);
 
     if (_reminderDate != null) {
       await NotificationService().scheduleNotification(

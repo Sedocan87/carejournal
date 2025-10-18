@@ -34,7 +34,7 @@ class DatabaseService {
     }
   }
 
-  Future<String> _getDatabasePassword() async {
+  Future<String> getDatabasePassword() async {
     const storage = FlutterSecureStorage();
     String? password = await storage.read(key: 'db_password');
     if (password == null) {
@@ -53,7 +53,7 @@ class DatabaseService {
   Future<Database> _initDatabase() async {
     final documentsDirectory = await getDatabasesPath();
     final path = join(documentsDirectory, _dbName);
-    final password = await _getDatabasePassword();
+    final password = await getDatabasePassword();
 
     return await openDatabase(
       path,

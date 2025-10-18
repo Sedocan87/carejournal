@@ -57,18 +57,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
         builder: (context, settings, child) {
           return ListView(
             children: [
-              SwitchListTile(
-                title: const Text('Enable Biometric Lock'),
-                subtitle: const Text(
-                    'Secure the app with your face or fingerprint.'),
-                value: settings.isBiometricLockEnabled,
-                onChanged: (bool value) {
-                  if (value && !_isPasswordSet) {
-                    _showPasswordRequiredDialog();
-                  } else {
-                    settings.setBiometricLockEnabled(value);
-                  }
-                },
+              Semantics(
+                label: 'Enable or disable biometric lock',
+                child: SwitchListTile(
+                  title: const Text('Enable Biometric Lock'),
+                  subtitle: const Text(
+                      'Secure the app with your face or fingerprint.'),
+                  value: settings.isBiometricLockEnabled,
+                  onChanged: (bool value) {
+                    if (value && !_isPasswordSet) {
+                      _showPasswordRequiredDialog();
+                    } else {
+                      settings.setBiometricLockEnabled(value);
+                    }
+                  },
+                ),
               ),
             ],
           );

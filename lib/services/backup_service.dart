@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:carejournal/services/database_helper.dart';
+import 'package:carejournal/services/database_service.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ class BackupService {
     final password = await _getPasswordFromUser(context);
     if (password == null || password.isEmpty) return;
 
-    final dbPath = await DatabaseHelper().getDbPath();
+    final dbPath = await DatabaseService.instance.getDbPath();
     final dbFile = File(dbPath);
     final dbBytes = await dbFile.readAsBytes();
 
@@ -47,8 +47,8 @@ class BackupService {
 
       final decrypted = encrypter.decryptBytes(encrypt.Encrypted(encryptedBytes), iv: iv);
 
-      final dbPath = await DatabaseHelper().getDbPath();
-      await DatabaseHelper().closeDatabase();
+      final dbPath = await DatabaseService.instance.getDbPath();
+      await DatabaseService.instance.closeDatabase();
       await File(dbPath).writeAsBytes(decrypted);
 
       if (!context.mounted) return;

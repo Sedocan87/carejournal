@@ -1,6 +1,6 @@
 # Privacy Policy for CareJournal
 
-**Last Updated: 2025-09-15**
+**Last Updated: 2025-10-18**
 
 Thank you for using CareJournal. Your privacy is our top priority. This privacy policy explains how we handle your data.
 
@@ -20,4 +20,4 @@ You can export your data to a CSV or PDF file to share with your healthcare prov
 
 If you have any questions about this privacy policy, you can contact us at:
 
-[Your Contact Email]
+contact@carejournal.dev

@@ -6,15 +6,22 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:carejournal/screens/auth_screen.dart';
-
+import 'package:carejournal/services/settings_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 import 'package:carejournal/main.dart';
 
 void main() {
   testWidgets('App starts with AuthScreen', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (context) => SettingsProvider(),
+        child: const MyApp(),
+      ),
+    );
 
     // Verify that AuthScreen is the first screen.
     expect(find.byType(AuthScreen), findsOneWidget);
