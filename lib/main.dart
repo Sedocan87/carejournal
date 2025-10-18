@@ -1,6 +1,7 @@
 import 'package:carejournal/screens/auth_screen.dart';
 import 'package:carejournal/services/notification_service.dart';
 import 'package:carejournal/services/settings_provider.dart';
+import 'package:carejournal/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,23 +23,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'CareJournal',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          brightness: Brightness.dark,
-          surface: const Color(0xFF1C1C2E),
-        ),
-        scaffoldBackgroundColor: const Color(0xFF1C1C2E),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
       home: const AuthScreen(),
     );
