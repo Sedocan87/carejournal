@@ -41,7 +41,7 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
       appBar: AppBar(
         title: const Text('Log Symptom'),
         actions: [
-          TextButton(
+          ElevatedButton(
             onPressed: _saveSymptom,
             child: const Text('Save'),
           ),

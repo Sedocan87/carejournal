@@ -8,7 +8,7 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: lightColorScheme,
       textTheme: textTheme,
-      scaffoldBackgroundColor: lightColorScheme.background,
+      scaffoldBackgroundColor: lightColorScheme.surface,
       appBarTheme: AppBarTheme(
         backgroundColor: lightColorScheme.primary,
         foregroundColor: lightColorScheme.onPrimary,
@@ -49,7 +49,7 @@ class AppTheme {
           borderSide: BorderSide(color: lightColorScheme.primary, width: 2),
         ),
         filled: true,
-        fillColor: lightColorScheme.surfaceVariant.withOpacity(0.5),
+        fillColor: lightColorScheme.surfaceContainerHighest.withAlpha(128),
       ),
     );
   }
@@ -59,7 +59,7 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: darkColorScheme,
       textTheme: darkTextTheme,
-      scaffoldBackgroundColor: darkColorScheme.background,
+      scaffoldBackgroundColor: darkColorScheme.surface,
       appBarTheme: AppBarTheme(
         backgroundColor: darkColorScheme.primary,
         foregroundColor: darkColorScheme.onPrimary,
@@ -100,7 +100,7 @@ class AppTheme {
           borderSide: BorderSide(color: darkColorScheme.primary, width: 2),
         ),
         filled: true,
-        fillColor: darkColorScheme.surfaceVariant.withOpacity(0.5),
+        fillColor: darkColorScheme.surfaceContainerHighest.withAlpha(128),
       ),
     );
   }

@@ -352,7 +352,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
                   children: [
                     const Text('Entry Type', style: TextStyle(fontWeight: FontWeight.bold)),
                     DropdownButtonFormField<String>(
-                      value: tempSelectedEntryTypeFilter,
+                      initialValue: tempSelectedEntryTypeFilter,
                       items: ['All', 'Note', 'Symptom', 'Photo', 'Medication', 'Appointment']
                           .map(
                             (label) => DropdownMenuItem(

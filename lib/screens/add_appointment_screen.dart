@@ -69,7 +69,7 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
       appBar: AppBar(
         title: const Text('Add Appointment'),
         actions: [
-          TextButton(
+          ElevatedButton(
             onPressed: _saveAppointment,
             child: const Text('Save'),
           ),

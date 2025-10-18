@@ -51,7 +51,7 @@ class _AddPhotoScreenState extends State<AddPhotoScreen> {
       appBar: AppBar(
         title: const Text('Add Photo'),
         actions: [
-          TextButton(
+          ElevatedButton(
             onPressed: _savePhoto,
             child: const Text('Save'),
           ),
@@ -71,7 +71,7 @@ class _AddPhotoScreenState extends State<AddPhotoScreen> {
                     child: Container(
                       height: 200,
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.surfaceVariant,
+                        color: theme.colorScheme.surfaceContainerHighest,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Center(

@@ -19,11 +19,9 @@ const lightColorScheme = ColorScheme(
   onError: Color(0xFFFFFFFF),
   errorContainer: Color(0xFFFFDAD6),
   onErrorContainer: Color(0xFF410002),
-  background: Color(0xFFF8F8F8), // Warm Off-White
-  onBackground: Color(0xFF1A1C1E), // Dark Charcoal
-  surface: Color(0xFFF8F8F8),
-  onSurface: Color(0xFF1A1C1E),
-  surfaceVariant: Color(0xFFDBE4E6),
+  surface: Color(0xFFF8F8F8), // Warm Off-White
+  onSurface: Color(0xFF1A1C1E), // Dark Charcoal
+  surfaceContainerHighest: Color(0xFFDBE4E6),
   onSurfaceVariant: Color(0xFF3F484A),
   outline: Color(0xFF6F797B),
   shadow: Color(0xFF000000),
@@ -51,11 +49,9 @@ const darkColorScheme = ColorScheme(
   onError: Color(0xFF690005),
   errorContainer: Color(0xFF93000A),
   onErrorContainer: Color(0xFFFFB4AB),
-  background: Color(0xFF1C1C2E), // Deep, warm dark blue/purple
-  onBackground: Color(0xFFE2E2E3),
-  surface: Color(0xFF1C1C2E),
+  surface: Color(0xFF1C1C2E), // Deep, warm dark blue/purple
   onSurface: Color(0xFFE2E2E3),
-  surfaceVariant: Color(0xFF3F484A),
+  surfaceContainerHighest: Color(0xFF3F484A),
   onSurfaceVariant: Color(0xFFBFC8CA),
   outline: Color(0xFF899294),
   shadow: Color(0xFF000000),

@@ -106,7 +106,10 @@ class DatabaseService {
     ''');
   }
 
-  Future<int> insertLogEntry(Map<String, dynamic> row, List<String> tags) async {
+  Future<int> insertLogEntry(
+    Map<String, dynamic> row,
+    List<String> tags,
+  ) async {
     final db = await database;
     final logEntryId = await db.insert(_logEntriesTable, row);
 
@@ -134,15 +137,18 @@ class DatabaseService {
       return await db.insert(_tagsTable, {'name': tagName});
     }
   }
-  
+
   Future<List<String>> getTagsForLogEntry(int logEntryId) async {
     final db = await database;
-    final result = await db.rawQuery('''
+    final result = await db.rawQuery(
+      '''
       SELECT T.name
       FROM $_tagsTable T
       INNER JOIN $_logEntryTagsTable LT ON T.id = LT.tag_id
       WHERE LT.log_entry_id = ?
-    ''', [logEntryId]);
+    ''',
+      [logEntryId],
+    );
     return result.map((row) => row['name'] as String).toList();
   }
 
@@ -199,7 +205,8 @@ class DatabaseService {
         whereClause += ' AND ';
       }
       final placeholders = tags.map((_) => '?').join(',');
-      whereClause += '''
+      whereClause +=
+          '''
         id IN (
           SELECT log_entry_id
           FROM $_logEntryTagsTable

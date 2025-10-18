@@ -11,13 +11,12 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  late final SettingsProvider _settingsProvider;
+
   bool _isPasswordSet = false;
 
   @override
   void initState() {
     super.initState();
-    _settingsProvider = Provider.of<SettingsProvider>(context, listen: false);
     _checkPasswordStatus();
   }
 

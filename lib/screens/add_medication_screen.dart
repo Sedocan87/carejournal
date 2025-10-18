@@ -69,7 +69,7 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
       appBar: AppBar(
         title: const Text('Add Medication'),
         actions: [
-          TextButton(
+          ElevatedButton(
             onPressed: _saveMedication,
             child: const Text('Save'),
           ),

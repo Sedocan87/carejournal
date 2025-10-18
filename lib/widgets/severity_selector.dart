@@ -21,13 +21,13 @@ class SeveritySelector extends StatelessWidget {
             radius: 15,
             backgroundColor: index <= severity
                 ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.surfaceVariant,
+                : Theme.of(context).colorScheme.surfaceContainerHighest,
             child: Text(
               index.toString(),
               style: TextStyle(
                 color: index <= severity
                     ? Theme.of(context).colorScheme.onPrimary
-                    : Theme.of(context).colorScheme.onSurfaceVariant,
+                    : Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ),

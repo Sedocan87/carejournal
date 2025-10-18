@@ -1,6 +1,6 @@
 import 'package:carejournal/services/database_service.dart';
 import 'package:carejournal/services/settings_provider.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:carejournal/screens/timeline_screen.dart';
@@ -79,6 +79,7 @@ class _AuthScreenState extends State<AuthScreen> {
               onPressed: () async {
                 final password = await DatabaseService.instance.getDatabasePassword();
                 if (passwordController.text == password) {
+                  if (!mounted) return;
                   Navigator.of(context).pop();
                   _navigateToTimeline();
                 }

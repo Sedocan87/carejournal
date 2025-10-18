@@ -39,7 +39,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
       appBar: AppBar(
         title: const Text('Add Note'),
         actions: [
-          TextButton(
+          ElevatedButton(
             onPressed: _saveNote,
             child: const Text('Save'),
           ),
