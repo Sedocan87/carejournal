@@ -7,8 +7,8 @@ import 'package:carejournal/services/backup_service.dart';
 import 'package:carejournal/services/csv_export_service.dart';
 import 'package:carejournal/services/database_service.dart';
 import 'package:carejournal/services/pdf_export_service.dart';
+import 'package:carejournal/widgets/add_entry_modal.dart';
 import 'package:flutter/material.dart';
-import 'package:carejournal/screens/add_entry_screen.dart';
 import 'package:intl/intl.dart';
 
 class TimelineScreen extends StatefulWidget {
@@ -294,9 +294,10 @@ class _TimelineScreenState extends State<TimelineScreen> {
         label: 'Add new log entry',
         child: FloatingActionButton(
           onPressed: () async {
-            final result = await Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AddEntryScreen()),
+            final result = await showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => const AddEntryModal(),
             );
             if (result == true) {
               _loadLogEntries(tags: _selectedTags);
