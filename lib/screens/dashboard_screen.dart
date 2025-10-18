@@ -1,5 +1,5 @@
 import 'package:carejournal/models/log_entry.dart';
-import 'package:carejournal/services/database_helper.dart';
+import 'package:carejournal/services/database_service.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +7,7 @@ class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
   Future<List<LogEntry>> _getSymptomEntries() async {
-    final maps = await DatabaseHelper().getLogEntries();
+    final maps = await DatabaseService.instance.getLogEntries();
     final entries = List.generate(maps.length, (i) => LogEntry.fromMap(maps[i]));
     return entries.where((entry) => entry.entryType == 'symptom').toList();
   }

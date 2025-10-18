@@ -142,12 +142,12 @@ Phase 2: Feature Expansion (Done)
 Phase 3: Polish & Testing (In Progress)
 
 -   **In Progress:** UI/UX refinement, adding animations, and ensuring a smooth user flow.
--   **To Do:** Conduct a full accessibility audit. Implement all necessary Semantics, check contrast ratios, and test with TalkBack and VoiceOver.
--   **To Do:** Implement the optional biometric app lock.
+-   **In Progress:** Conduct a full accessibility audit. Implement all necessary Semantics, check contrast ratios, and test with TalkBack and VoiceOver.
+-   **Done:** Implement the optional biometric app lock.
 
 Phase 4: Deployment (To Do)
 
--   **To Do:** Write the plain-language privacy policy. Prepare App Store and Google Play Store listings.
+-   **Done:** Write the plain-language privacy policy. Prepare App Store and Google Play Store listings.
 -   **To Do:** Final round of testing on physical devices. Beta test with a small group of target users if possible. Submit for review.
 
 5. Privacy Policy Requirements

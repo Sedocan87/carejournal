@@ -100,83 +100,95 @@ class _TimelineScreenState extends State<TimelineScreen> {
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SettingsScreen(),
-                ),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterDialog,
-          ),
-          IconButton(
-            icon: const Icon(Icons.bar_chart),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DashboardScreen(),
-                ),
-              );
-            },
-          ),
-          PopupMenuButton(
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'backup',
-                child: Text('Backup'),
-              ),
-              const PopupMenuItem(
-                value: 'restore',
-                child: Text('Restore'),
-              ),
-              const PopupMenuItem(
-                value: 'pdf',
-                child: Text('Export PDF'),
-              ),
-              const PopupMenuItem(
-                value: 'csv',
-                child: Text('Export CSV'),
-              ),
-              const PopupMenuItem(
-                value: 'privacy',
-                child: Text('Privacy Policy'),
-              ),
-            ],
-            onSelected: (value) {
-              if (value == 'backup') {
-                _backupService.backupDatabase(context);
-              } else if (value == 'restore') {
-                _backupService.restoreDatabase(context).then((_) {
-                  _loadLogEntries(tags: _selectedTags);
-                });
-              } else if (value == 'pdf') {
-                _logEntriesFuture.then((logEntries) {
-                  if (logEntries.isNotEmpty) {
-                    PdfExportService().generateAndSharePdf(logEntries);
-                  }
-                });
-              } else if (value == 'csv') {
-                _logEntriesFuture.then((logEntries) {
-                  if (logEntries.isNotEmpty) {
-                    CsvExportService().generateAndShareCsv(logEntries);
-                  }
-                });
-              } else if (value == 'privacy') {
+          Semantics(
+            label: 'Settings',
+            child: IconButton(
+              icon: const Icon(Icons.settings),
+              onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const PrivacyPolicyScreen(),
+                    builder: (context) => const SettingsScreen(),
                   ),
                 );
-              }
-            },
+              },
+            ),
+          ),
+          Semantics(
+            label: 'Filter entries',
+            child: IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilterDialog,
+            ),
+          ),
+          Semantics(
+            label: 'View dashboard',
+            child: IconButton(
+              icon: const Icon(Icons.bar_chart),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const DashboardScreen(),
+                  ),
+                );
+              },
+            ),
+          ),
+          Semantics(
+            label: 'More options',
+            child: PopupMenuButton(
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 'backup',
+                  child: Text('Backup'),
+                ),
+                const PopupMenuItem(
+                  value: 'restore',
+                  child: Text('Restore'),
+                ),
+                const PopupMenuItem(
+                  value: 'pdf',
+                  child: Text('Export PDF'),
+                ),
+                const PopupMenuItem(
+                  value: 'csv',
+                  child: Text('Export CSV'),
+                ),
+                const PopupMenuItem(
+                  value: 'privacy',
+                  child: Text('Privacy Policy'),
+                ),
+              ],
+              onSelected: (value) {
+                if (value == 'backup') {
+                  _backupService.backupDatabase(context);
+                } else if (value == 'restore') {
+                  _backupService.restoreDatabase(context).then((_) {
+                    _loadLogEntries(tags: _selectedTags);
+                  });
+                } else if (value == 'pdf') {
+                  _logEntriesFuture.then((logEntries) {
+                    if (logEntries.isNotEmpty) {
+                      PdfExportService().generateAndSharePdf(logEntries);
+                    }
+                  });
+                } else if (value == 'csv') {
+                  _logEntriesFuture.then((logEntries) {
+                    if (logEntries.isNotEmpty) {
+                      CsvExportService().generateAndShareCsv(logEntries);
+                    }
+                  });
+                } else if (value == 'privacy') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PrivacyPolicyScreen(),
+                    ),
+                  );
+                }
+              },
+            ),
           ),
         ],
       ),
@@ -184,16 +196,19 @@ class _TimelineScreenState extends State<TimelineScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search entries...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
+            child: Semantics(
+              label: 'Search entries',
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search entries...',
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
                 ),
-                filled: true,
               ),
             ),
           ),
@@ -214,45 +229,58 @@ class _TimelineScreenState extends State<TimelineScreen> {
                   itemCount: logEntries.length,
                   itemBuilder: (context, index) {
                     final entry = logEntries[index];
-                    return Card(
-                      child: ExpansionTile(
-                        title: Text(
-                          entry.title,
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        subtitle: Text(
-                          entry.timestamp.toString(),
-                          style: Theme.of(
-                            context,
-                          ).textTheme.bodySmall?.copyWith(color: Colors.grey),
-                        ),
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (entry.notes != null && entry.notes!.isNotEmpty)
-                                  Text(entry.notes!),
-                                if (entry.entryType == 'symptom')
-                                  Row(
-                                    children: [
-                                      Text('Severity: ${entry.data!['severity']}'),
-                                      const SizedBox(width: 10),
-                                      Text('Location: ${entry.data!['location']}'),
-                                    ],
-                                  ),
-                                if (entry.entryType == 'photo' && entry.data != null && entry.data!['path'] != null)
-                                  Image.file(File(entry.data!['path']! as String), height: 150),
-                                if (entry.tags.isNotEmpty)
-                                  Wrap(
-                                    spacing: 8.0,
-                                    children: entry.tags.map((tag) => Chip(label: Text(tag))).toList(),
-                                  )
-                              ],
-                            ),
+                    return Semantics(
+                      label:
+                          'Log entry: ${entry.title}, at ${entry.timestamp.toString()}',
+                      child: Card(
+                        child: ExpansionTile(
+                          title: Text(
+                            entry.title,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
-                        ],
+                          subtitle: Text(
+                            entry.timestamp.toString(),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(color: Colors.grey),
+                          ),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (entry.notes != null &&
+                                      entry.notes!.isNotEmpty)
+                                    Text(entry.notes!),
+                                  if (entry.entryType == 'symptom')
+                                    Row(
+                                      children: [
+                                        Text(
+                                            'Severity: ${entry.data!['severity']}'),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                            'Location: ${entry.data!['location']}'),
+                                      ],
+                                    ),
+                                  if (entry.entryType == 'photo' &&
+                                      entry.data != null &&
+                                      entry.data!['path'] != null)
+                                    Image.file(
+                                        File(entry.data!['path']! as String),
+                                        height: 150),
+                                  if (entry.tags.isNotEmpty)
+                                    Wrap(
+                                      spacing: 8.0,
+                                      children: entry.tags
+                                          .map((tag) => Chip(label: Text(tag)))
+                                          .toList(),
+                                    )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -262,17 +290,20 @@ class _TimelineScreenState extends State<TimelineScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final result = await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddEntryScreen()),
-          );
-          if (result == true) {
-            _loadLogEntries(tags: _selectedTags);
-          }
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: Semantics(
+        label: 'Add new log entry',
+        child: FloatingActionButton(
+          onPressed: () async {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AddEntryScreen()),
+            );
+            if (result == true) {
+              _loadLogEntries(tags: _selectedTags);
+            }
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
