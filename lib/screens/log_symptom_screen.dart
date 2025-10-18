@@ -2,6 +2,8 @@ import 'package:carejournal/models/log_entry.dart';
 import 'package:carejournal/services/database_service.dart';
 import 'package:carejournal/widgets/severity_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:haptic_feedback/haptic_feedback.dart';
 
 class LogSymptomScreen extends StatefulWidget {
   const LogSymptomScreen({super.key});
@@ -141,6 +143,21 @@ class _LogSymptomScreenState extends State<LogSymptomScreen> {
         data: {'severity': _severity},
       );
       await DatabaseService.instance.insertLogEntry(newEntry.toMap(), _selectedTags);
+
+      // Haptic feedback
+      Haptics.vibrate(HapticsType.light);
+
+      // Show toast
+      Fluttertoast.showToast(
+        msg: "Symptom Saved!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0
+      );
+
       if (!mounted) return;
       Navigator.pop(context, true);
     }

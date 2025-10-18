@@ -2,6 +2,8 @@ import 'package:carejournal/models/log_entry.dart';
 import 'package:carejournal/services/database_service.dart';
 import 'package:carejournal/services/notification_service.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:intl/intl.dart';
 
 class AddAppointmentScreen extends StatefulWidget {
@@ -115,9 +117,16 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
                           : DateFormat.yMd().add_jm().format(_reminderDate!),
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.calendar_today),
-                    onPressed: _pickReminderDate,
+                  Semantics(
+                    label: 'Set reminder date',
+                    child: SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: IconButton(
+                        icon: const Icon(Icons.calendar_today),
+                        onPressed: _pickReminderDate,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -184,6 +193,20 @@ class _AddAppointmentScreenState extends State<AddAppointmentScreen> {
           scheduledDate: _reminderDate!,
         );
       }
+
+      // Haptic feedback
+      Haptics.vibrate(HapticsType.light);
+
+      // Show toast
+      Fluttertoast.showToast(
+        msg: "Appointment Saved!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0
+      );
 
       if (!mounted) return;
       Navigator.pop(context, true);

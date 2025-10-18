@@ -6,8 +6,10 @@ import 'package:carejournal/screens/settings_screen.dart';
 import 'package:carejournal/services/backup_service.dart';
 import 'package:carejournal/services/csv_export_service.dart';
 import 'package:carejournal/services/database_service.dart';
+import 'package:carejournal/screens/photo_detail_screen.dart';
 import 'package:carejournal/services/pdf_export_service.dart';
 import 'package:carejournal/widgets/add_entry_modal.dart';
+import 'package:carejournal/widgets/empty_state.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -19,7 +21,8 @@ class TimelineScreen extends StatefulWidget {
 }
 
 class _TimelineScreenState extends State<TimelineScreen> {
-  late Future<List<LogEntry>> _logEntriesFuture;
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  List<LogEntry> _logEntries = [];
   final _searchController = TextEditingController();
   final _backupService = BackupService();
   List<String> _selectedTags = [];
@@ -42,21 +45,22 @@ class _TimelineScreenState extends State<TimelineScreen> {
     });
   }
 
-  void _loadLogEntries({
+  Future<void> _loadLogEntries({
     String? searchQuery,
     List<String>? tags,
     String? entryType,
     DateTime? startDate,
     DateTime? endDate,
-  }) {
+  }) async {
+    final entries = await _getLogEntries(
+      searchQuery: searchQuery,
+      tags: tags,
+      entryType: entryType,
+      startDate: startDate,
+      endDate: endDate,
+    );
     setState(() {
-      _logEntriesFuture = _getLogEntries(
-        searchQuery: searchQuery,
-        tags: tags,
-        entryType: entryType,
-        startDate: startDate,
-        endDate: endDate,
-      );
+      _logEntries = entries;
     });
   }
 
@@ -168,17 +172,13 @@ class _TimelineScreenState extends State<TimelineScreen> {
                     _loadLogEntries(tags: _selectedTags);
                   });
                 } else if (value == 'pdf') {
-                  _logEntriesFuture.then((logEntries) {
-                    if (logEntries.isNotEmpty) {
-                      PdfExportService().generateAndSharePdf(logEntries);
-                    }
-                  });
+                  if (_logEntries.isNotEmpty) {
+                    PdfExportService().generateAndSharePdf(_logEntries);
+                  }
                 } else if (value == 'csv') {
-                  _logEntriesFuture.then((logEntries) {
-                    if (logEntries.isNotEmpty) {
-                      CsvExportService().generateAndShareCsv(logEntries);
-                    }
-                  });
+                  if (_logEntries.isNotEmpty) {
+                    CsvExportService().generateAndShareCsv(_logEntries);
+                  }
                 } else if (value == 'privacy') {
                   Navigator.push(
                     context,
@@ -213,80 +213,18 @@ class _TimelineScreenState extends State<TimelineScreen> {
             ),
           ),
           Expanded(
-            child: FutureBuilder<List<LogEntry>>(
-              future: _logEntriesFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No entries yet.'));
-                }
-
-                final logEntries = snapshot.data!;
-                return ListView.builder(
-                  itemCount: logEntries.length,
-                  itemBuilder: (context, index) {
-                    final entry = logEntries[index];
-                    return Semantics(
-                      label:
-                          'Log entry: ${entry.title}, at ${entry.timestamp.toString()}',
-                      child: Card(
-                        child: ExpansionTile(
-                          title: Text(
-                            entry.title,
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          subtitle: Text(
-                            entry.timestamp.toString(),
-                            style: Theme.of(
-                              context,
-                            ).textTheme.bodySmall?.copyWith(color: Colors.grey),
-                          ),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (entry.notes != null &&
-                                      entry.notes!.isNotEmpty)
-                                    Text(entry.notes!),
-                                  if (entry.entryType == 'symptom')
-                                    Row(
-                                      children: [
-                                        Text(
-                                            'Severity: ${entry.data!['severity']}'),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                            'Location: ${entry.data!['location']}'),
-                                      ],
-                                    ),
-                                  if (entry.entryType == 'photo' &&
-                                      entry.data != null &&
-                                      entry.data!['path'] != null)
-                                    Image.file(
-                                        File(entry.data!['path']! as String),
-                                        height: 150),
-                                  if (entry.tags.isNotEmpty)
-                                    Wrap(
-                                      spacing: 8.0,
-                                      children: entry.tags
-                                          .map((tag) => Chip(label: Text(tag)))
-                                          .toList(),
-                                    )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
+            child: _logEntries.isEmpty
+                ? const EmptyState(
+                    message: "Your journal is ready. Tap the '+' to log your first entry and start your health story.",
+                    icon: Icons.book_outlined,
+                  )
+                : AnimatedList(
+                    key: _listKey,
+                    initialItemCount: _logEntries.length,
+                    itemBuilder: (context, index, animation) {
+                      return _buildItem(_logEntries[index], animation);
+                    },
+                  ),
           ),
         ],
       ),
@@ -300,10 +238,93 @@ class _TimelineScreenState extends State<TimelineScreen> {
               builder: (context) => const AddEntryModal(),
             );
             if (result == true) {
-              _loadLogEntries(tags: _selectedTags);
+              await _loadLogEntries(tags: _selectedTags);
+              if (_logEntries.isNotEmpty && _listKey.currentState != null) {
+                _listKey.currentState!.insertItem(0, duration: const Duration(milliseconds: 500));
+              }
             }
           },
           child: const Icon(Icons.add),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildItem(LogEntry entry, Animation<double> animation) {
+    return SizeTransition(
+      sizeFactor: animation,
+      child: FadeTransition(
+        opacity: animation,
+        child: Semantics(
+          label:
+              'Log entry: ${entry.title}, at ${entry.timestamp.toString()}',
+          child: Card(
+            child: ExpansionTile(
+              title: Text(
+                entry.title,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              subtitle: Text(
+                entry.timestamp.toString(),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: Colors.grey),
+              ),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (entry.notes != null &&
+                          entry.notes!.isNotEmpty)
+                        Text(entry.notes!),
+                      if (entry.entryType == 'symptom')
+                        Row(
+                          children: [
+                            Text(
+                                'Severity: ${entry.data!['severity']}'),
+                            const SizedBox(width: 10),
+                            Text(
+                                'Location: ${entry.data!['location']}'),
+                          ],
+                        ),
+                      if (entry.entryType == 'photo' &&
+                          entry.data != null &&
+                          entry.data!['path'] != null)
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PhotoDetailScreen(
+                                  imagePath: entry.data!['path']! as String,
+                                  tag: 'photo-${entry.id}',
+                                ),
+                              ),
+                            );
+                          },
+                          child: Hero(
+                            tag: 'photo-${entry.id}',
+                            child: Image.file(
+                              File(entry.data!['path']! as String),
+                              height: 150,
+                            ),
+                          ),
+                        ),
+                      if (entry.tags.isNotEmpty)
+                        Wrap(
+                          spacing: 8.0,
+                          children: entry.tags
+                              .map((tag) => Chip(label: Text(tag)))
+                              .toList(),
+                        )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
