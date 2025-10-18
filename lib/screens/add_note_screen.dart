@@ -1,6 +1,8 @@
 import 'package:carejournal/models/log_entry.dart';
 import 'package:carejournal/services/database_service.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:haptic_feedback/haptic_feedback.dart';
 
 class AddNoteScreen extends StatefulWidget {
   const AddNoteScreen({super.key});
@@ -127,6 +129,21 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
         notes: _notesController.text,
       );
       await DatabaseService.instance.insertLogEntry(newEntry.toMap(), _selectedTags);
+
+      // Haptic feedback
+      Haptics.vibrate(HapticsType.light);
+
+      // Show toast
+      Fluttertoast.showToast(
+        msg: "Note Saved!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0
+      );
+
       if (!mounted) return;
       Navigator.pop(context, true);
     }

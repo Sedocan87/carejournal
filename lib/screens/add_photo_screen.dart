@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:carejournal/models/log_entry.dart';
 import 'package:carejournal/services/database_service.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:haptic_feedback/haptic_feedback.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddPhotoScreen extends StatefulWidget {
@@ -62,22 +64,25 @@ class _AddPhotoScreenState extends State<AddPhotoScreen> {
           child: ListView(
             children: [
               if (_imageFile == null)
-                GestureDetector(
-                  onTap: _pickImage,
-                  child: Container(
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceVariant,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.add_a_photo_outlined, size: 48, color: theme.colorScheme.onSurfaceVariant),
-                          const SizedBox(height: 8),
-                          Text('Tap to select a photo', style: theme.textTheme.bodyLarge),
-                        ],
+                Semantics(
+                  label: 'Select a photo to upload',
+                  child: GestureDetector(
+                    onTap: _pickImage,
+                    child: Container(
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surfaceVariant,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.add_a_photo_outlined, size: 48, color: theme.colorScheme.onSurfaceVariant),
+                            const SizedBox(height: 8),
+                            Text('Tap to select a photo', style: theme.textTheme.bodyLarge),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -92,13 +97,16 @@ class _AddPhotoScreenState extends State<AddPhotoScreen> {
                       width: double.infinity,
                       fit: BoxFit.cover,
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white),
-                      onPressed: () {
-                        setState(() {
-                          _imageFile = null;
-                        });
-                      },
+                    Semantics(
+                      label: 'Remove selected photo',
+                      child: IconButton(
+                        icon: const Icon(Icons.close, color: Colors.white),
+                        onPressed: () {
+                          setState(() {
+                            _imageFile = null;
+                          });
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -182,6 +190,21 @@ class _AddPhotoScreenState extends State<AddPhotoScreen> {
         data: {'path': _imageFile!.path},
       );
       await DatabaseService.instance.insertLogEntry(newEntry.toMap(), _selectedTags);
+
+      // Haptic feedback
+      Haptics.vibrate(HapticsType.light);
+
+      // Show toast
+      Fluttertoast.showToast(
+        msg: "Photo Saved!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0
+      );
+
       if (!mounted) return;
       Navigator.pop(context, true);
     } else if (_imageFile == null) {
